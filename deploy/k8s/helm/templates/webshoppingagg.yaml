@@ -43,7 +43,7 @@ spec:
     spec:
       containers:
         - name: webshoppingagg
-          image: eshopdapr/webshoppingagg:latest
+          image: {{ .Values.eshoprepo }} /webshoppingagg: {{ .Values.eshopversion }}
           imagePullPolicy: IfNotPresent
           ports:
             - name: api-http

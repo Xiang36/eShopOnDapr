@@ -40,7 +40,7 @@ spec:
     spec:
       containers:
         - name: payment-api
-          image: eshopdapr/payment.api:latest
+          image: {{ .Values.eshoprepo }}/payment.api: {{ .Values.eshopversion }}
           imagePullPolicy: IfNotPresent
           ports:
             - name: http

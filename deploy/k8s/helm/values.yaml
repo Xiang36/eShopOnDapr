@@ -3,3 +3,9 @@ namespace: eshopondapr
 
 # Name of host where eShopOnDapr can be accessed.
 hostName: localhost
+
+# repo 
+eshoprepo: geffzhang
+
+# image version
+eshopversion: 1.0.0

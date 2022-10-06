@@ -43,7 +43,7 @@ spec:
     spec:
       containers:
         - name: identity-api
-          image: eshopdapr/identity.api:latest
+          image: {{ .Values.eshoprepo }}/identity.api: {{ .Values.eshopversion }}
           imagePullPolicy: IfNotPresent
           ports:
             - name: identity-http

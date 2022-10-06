@@ -42,7 +42,7 @@ spec:
     spec:
       containers:
         - name: basket-api
-          image: eshopdapr/basket.api:latest
+          image: {{ .Values.eshoprepo }}/basket.api: {{ .Values.eshoprepo }}
           imagePullPolicy: IfNotPresent
           ports:
             - name: api-http

@@ -35,7 +35,7 @@ spec:
     spec:
       containers:
         - name: blazorclient
-          image: eshopdapr/blazor.client:latest
+          image: {{ .Values.eshoprepo }}/blazor.client: {{ .Values.eshopversion }}
           imagePullPolicy: IfNotPresent
           ports:
             - name: client-http

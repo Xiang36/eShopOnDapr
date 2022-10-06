@@ -47,7 +47,7 @@ spec:
     spec:
       containers:
         - name: webstatus
-          image: eshopdapr/webstatus:latest
+          image: {{ .Values.eshoprepo }}/webstatus: {{ .Values.eshopversion }}
           imagePullPolicy: IfNotPresent
           ports:
             - name: webstatus-http

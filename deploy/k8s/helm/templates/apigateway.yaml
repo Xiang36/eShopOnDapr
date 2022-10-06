@@ -42,7 +42,7 @@ spec:
     spec:
       containers:
       - name: apigateway
-        image: eshopdapr/webshoppingapigw:latest
+        image: {{ .Values.eshoprepo }}/webshoppingapigw: {{ .Values.eshopversion }}
         imagePullPolicy: IfNotPresent
         ports:
           - name: http

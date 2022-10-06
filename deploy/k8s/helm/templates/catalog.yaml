@@ -40,7 +40,7 @@ spec:
     spec:
       containers:
         - name: catalog-api
-          image: eshopdapr/catalog.api:latest
+          image: {{ .Values.eshoprepo }}/catalog.api: {{ .Values.eshopversion }}
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80
