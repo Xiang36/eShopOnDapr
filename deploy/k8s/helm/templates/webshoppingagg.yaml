@@ -43,7 +43,7 @@ spec:
     spec:
       containers:
         - name: webshoppingagg
-          image: {{ .Values.eshoprepo }} /webshoppingagg: {{ .Values.eshopversion }}
+          image:  "{{ .Values.global.registry }}/webshoppingagg:{{ .Values.global.tag }}"
           imagePullPolicy: IfNotPresent
           ports:
             - name: api-http

@@ -40,7 +40,7 @@ spec:
     spec:
       containers:
         - name: payment-api
-          image: {{ .Values.eshoprepo }}/payment.api: {{ .Values.eshopversion }}
+          image: "{{ .Values.global.registry }}/payment.api:{{ .Values.global.tag }}"
           imagePullPolicy: IfNotPresent
           ports:
             - name: http

@@ -94,6 +94,18 @@ spec:
 
 ---
 
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: test-stripprefix
+  namespace: eshopondapr
+spec:
+  stripPrefix:
+    prefixes:
+      - /gateway/
+
+---
+
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -103,11 +115,15 @@ metadata:
     app: eshop
     service: apigateway
   annotations:
-    nginx.ingress.kubernetes.io/ssl-redirect: "false"
-    nginx.ingress.kubernetes.io/use-regex: "true"
-    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    kubernetes.io/ingress.class: traefik
+    traefik.ingress.kubernetes.io/ssl-redirect: "false"
+    traefik.ingress.kubernetes.io/use-regex: "true"
+    traefik.ingress.kubernetes.io/rewrite-target: /$2
+    traefik.frontend.rule.type: PathPrefix
+    traefik.ingress.kubernetes.io/rule-type: PathPrefix
+    traefik.ingress.kubernetes.io/router.entrypoints: web
+    traefik.ingress.kubernetes.io/router.middlewares: eshopondapr-test-stripprefix@kubernetescrd
 spec:
-  ingressClassName: nginx
   rules:
   - host: {{ .Values.hostName }}
     http:

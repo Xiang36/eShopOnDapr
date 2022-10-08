@@ -43,7 +43,7 @@ spec:
     spec:
       containers:
         - name: identity-api
-          image: {{ .Values.eshoprepo }}/identity.api: {{ .Values.eshopversion }}
+          image: "{{ .Values.global.registry }}/identity.api:{{ .Values.global.tag }}"
           imagePullPolicy: IfNotPresent
           ports:
             - name: identity-http

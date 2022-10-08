@@ -7,3 +7,4 @@ hostName: localhost
 global:
   registry: docker.io/geffzhang
   tag: '1.0.0'
+ 

@@ -1,16 +1,14 @@
 kind: ConfigMap
 apiVersion: v1
 metadata:
-  name: ordering-cm
+  name: catalog-cm
   namespace: {{ .Values.namespace }}
   labels:
     app: eshop
-    service: ordering
+    service: catalog
 data:
   ASPNETCORE_ENVIRONMENT: Development
   ASPNETCORE_URLS: http://0.0.0.0:80
-  IdentityUrl: http://identity-api
-  IdentityUrlExternal: http://{{ .Values.hostName}}:30008
   SeqServerUrl: http://seq
 
 ---
@@ -18,39 +16,40 @@ data:
 kind: Deployment
 apiVersion: apps/v1
 metadata:
-  name: ordering
+  name: catalog
   namespace: {{ .Values.namespace }}
   labels:
     app: eshop
-    service: ordering
+    service: catalog
 spec:
   replicas: 1
   selector:
     matchLabels:
-      service: ordering
+      service: catalog
   template:
     metadata:
       labels:
         app: eshop
-        service: ordering
+        service: catalog
       annotations:
         dapr.io/enabled: "true"
-        dapr.io/app-id: "ordering-api"
+        dapr.io/app-id: "catalog-api"
         dapr.io/app-port: "80"
         dapr.io/config: "dapr-config"
         dapr.io/log-as-json: "true"
     spec:
       containers:
-        - name: ordering-api
-          image: "{{ .Values.global.registry }}/ordering.api:{{ .Values.global.tag }}"
+        - name: catalog-api
+          image:  "{{ .Values.global.registry }}/catalog.api:{{ .Values.global.tag }}"
           imagePullPolicy: IfNotPresent
           ports:
-            - name: api-http
-              containerPort: 80
+            - containerPort: 80
+              protocol: TCP
+            - containerPort: 81
               protocol: TCP
           envFrom:
             - configMapRef:
-                name: ordering-cm
+                name: catalog-cm
           readinessProbe:
             httpGet:
               path: /hc
@@ -60,18 +59,27 @@ spec:
 
 ---
 
-apiVersion: v1
 kind: Service
+apiVersion: v1
 metadata:
-  name: ordering-api
+  name: catalog-api
   namespace: {{ .Values.namespace }}
   labels:
     app: eshop
-    service: ordering
+    service: catalog
 spec:
   ports:
-    - name: http
-      port: 80
-      targetPort: api-http
+    - port: 80
+      targetPort: 80
+      protocol: TCP
+      name: http
+    - port: 3500
+      targetPort: 3500
+      protocol: TCP
+      name: dapr-http
+    - port: 50001
+      targetPort: 50001
+      protocol: TCP
+      name: dapr-grpc
   selector:
-    service: ordering
+    service: catalog

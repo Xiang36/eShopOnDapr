@@ -35,7 +35,7 @@ spec:
     spec:
       containers:
         - name: blazorclient
-          image: "{{ .Values.global.registry }}/blazor.client:{{ .Values.global.tag }}"
+          image:  "{{ .Values.global.registry }}/blazor.client:{{ .Values.global.tag }}"
           imagePullPolicy: IfNotPresent
           ports:
             - name: client-http
@@ -80,10 +80,12 @@ metadata:
     app: eshop
     service: blazorclient
   annotations:
-    nginx.ingress.kubernetes.io/ssl-redirect: "false"
-    nginx.ingress.kubernetes.io/use-regex: "true"
+    kubernetes.io/ingress.class: traefik
+    traefik.ingress.kubernetes.io/ssl-redirect: "false"
+    traefik.ingress.kubernetes.io/use-regex: "true"
+    traefik.frontend.rule.type: PathPrefix
+    traefik.ingress.kubernetes.io/rule-type: PathPrefix
 spec:
-  ingressClassName: nginx
   rules:
   - host: {{ .Values.hostName }}
     http:

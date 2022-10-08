@@ -1,16 +1,14 @@
 kind: ConfigMap
 apiVersion: v1
 metadata:
-  name: ordering-cm
+  name: payment-cm
   namespace: {{ .Values.namespace }}
   labels:
     app: eshop
-    service: ordering
+    service: payment
 data:
   ASPNETCORE_ENVIRONMENT: Development
   ASPNETCORE_URLS: http://0.0.0.0:80
-  IdentityUrl: http://identity-api
-  IdentityUrlExternal: http://{{ .Values.hostName}}:30008
   SeqServerUrl: http://seq
 
 ---
@@ -18,39 +16,39 @@ data:
 kind: Deployment
 apiVersion: apps/v1
 metadata:
-  name: ordering
+  name: payment
   namespace: {{ .Values.namespace }}
   labels:
     app: eshop
-    service: ordering
+    service: payment
 spec:
   replicas: 1
   selector:
     matchLabels:
-      service: ordering
+      service: payment
   template:
     metadata:
       labels:
         app: eshop
-        service: ordering
+        service: payment
       annotations:
         dapr.io/enabled: "true"
-        dapr.io/app-id: "ordering-api"
+        dapr.io/app-id: "payment-api"
         dapr.io/app-port: "80"
         dapr.io/config: "dapr-config"
         dapr.io/log-as-json: "true"
     spec:
       containers:
-        - name: ordering-api
-          image: "{{ .Values.global.registry }}/ordering.api:{{ .Values.global.tag }}"
+        - name: payment-api
+          image:  "{{ .Values.global.registry }}/payment.api:{{ .Values.global.tag }}"
           imagePullPolicy: IfNotPresent
           ports:
-            - name: api-http
+            - name: http
               containerPort: 80
               protocol: TCP
           envFrom:
             - configMapRef:
-                name: ordering-cm
+                name: payment-cm
           readinessProbe:
             httpGet:
               path: /hc
@@ -63,15 +61,16 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: ordering-api
+  name: payment-api
   namespace: {{ .Values.namespace }}
   labels:
     app: eshop
-    service: ordering
+    service: payment
 spec:
   ports:
-    - name: http
-      port: 80
-      targetPort: api-http
+    - port: 80
+      targetPort: 80
+      protocol: TCP
+      name: http
   selector:
-    service: ordering
+    service: payment
