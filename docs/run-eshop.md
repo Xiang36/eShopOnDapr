@@ -65,7 +65,7 @@ You can run eShopOnDapr on a local Kubernetes cluster by leveraging the [support
 1. Install the NGINX ingress controller:
 
    ```terminal
-   kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.1.3/deploy/static/provider/cloud/deploy.yaml
+   
    ```
 
 2. Deploy Dapr to the cluster (see the [*Install Dapr into a Kubernetes cluster how-to*](https://docs.dapr.io/getting-started/install-dapr-kubernetes/) for details.):
