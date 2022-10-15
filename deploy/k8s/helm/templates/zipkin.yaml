@@ -44,3 +44,56 @@ spec:
       name: zipkin
   selector:
     service: zipkin
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: zipkin-ingress
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: eshop
+    service: zipkin
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/use-regex: "true"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: {{ .Values.hostName }}
+    http:
+      paths: 
+      - path: /zipkin(/.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: zipkin
+            port: 
+              number: 9411
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: webstatus-ingress-redirect
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: eshop
+    service: webstatus
+  annotations:
+    nginx.ingress.kubernetes.io/permanent-redirect: "http://{{ .Values.hostName }}/zipkin/"
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: {{ .Values.hostName }}
+    http:
+      paths: 
+      - path: /zipkin
+        pathType: Exact
+        backend:
+          service:
+            name: zipkin
+            port: 
+              number: 9411
